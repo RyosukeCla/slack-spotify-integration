@@ -1,7 +1,7 @@
 const { setSlackProfileStatus } = require('./slack')
 const { refreshToken, setupToken, getSpotifyCurrentTrack } = require('./spotify')
 const config = require('./config')
-const { pollingPeriod } = config
+const { pollingPeriod, slack: { playingStatus } } = config
 
 function getMessage(track) {
   if (!track) {
@@ -19,7 +19,7 @@ async function main() {
 
   const setPlayingProfile = async (message) => {
     await setSlackProfileStatus({
-      emoji: ':spotify:',
+      emoji: playingStatus.emoji,
       message
     })
   }

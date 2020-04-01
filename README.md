@@ -17,3 +17,12 @@ $ SLACK_LEGACY_TOKEN=<...> \
   SPOTIFY_CLIENT_SECRET=<...> \
   npm start
 ```
+
+## environments
+
+- SLACK_LEGACY_TOKEN: (required) slack legacy token
+- SPOTIFY_CLIENT_ID: (required) spotify app client id
+- SPOTIFY_CLIENT_SECRET: (required) spotify app client secret
+- SLACK_PLAYING_STATUS_EMOJI: (optional, default ':headphones:') status emoji when playing track
+- HOST: (optional, default 'localhost') callback url host for spotify authentication
+- PORT: (optional, default '8000') callback url port for spotify authentication
