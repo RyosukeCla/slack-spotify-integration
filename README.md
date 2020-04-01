@@ -1,5 +1,7 @@
 # slack-spotify-integration
 
+![slack-spotify-integration](./img/slack.png)
+
 ## setup
 
 1. register spotify developer
