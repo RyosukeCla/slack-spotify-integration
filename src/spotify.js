@@ -84,7 +84,7 @@ exports.refreshToken = function() {
       ...tokenJson,
       access_token: newToken.access_token
     }))
-    console.log(`[log] updated access token.`)
+    console.log(`[log] refreshed access token.`)
   }, (expires_in - 600) * 1000)
 }
 
