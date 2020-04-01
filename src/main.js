@@ -9,7 +9,7 @@ function getMessage(track) {
   }
   const { item: { artists, name } } = track
   const artist = artists.length > 0 ? artists[0] : { name: 'unknown' }
-  return `${name} - ${artist.name}`
+  return ` ${name} - ${artist.name}`
 }
 
 async function main() {
