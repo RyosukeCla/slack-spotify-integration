@@ -15,28 +15,20 @@ function getMessage(track) {
 async function main() {
   console.log('[log] start slack spotify integration.')
   await setupToken()
-  refreshToken()
-
-  const setPlayingProfile = async (message) => {
-    await setSlackProfileStatus({
-      emoji: playingStatus.emoji,
-      message
-    })
-  }
-
-  const clearProfile = async () => {
-    await setSlackProfileStatus({
-      emoji: '',
-      message: ''
-    })
-  }
 
   const updateProfile = async (preMessage, nextMessage) => {
     if (preMessage !== nextMessage) {
       if (nextMessage) {
-        await setPlayingProfile(nextMessage)
+        await setSlackProfileStatus({
+          emoji: playingStatus.emoji,
+          message: nextMessage
+        })
       } else {
-        await clearProfile()
+        // clear profile
+        await setSlackProfileStatus({
+          emoji: '',
+          message: ''
+        })
       }
     }
   }

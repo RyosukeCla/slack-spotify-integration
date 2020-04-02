@@ -74,31 +74,20 @@ async function getNewAccessTokens(refreshToken) {
   return await res.json()
 }
 
-exports.refreshToken = function() {
+async function refreshToken() {
   const tokenJson = JSON.parse(readFileSync(tokenPath).toString())
-  const { refresh_token, expires_in } = tokenJson
-
-  setInterval(async () => {
-    const newToken = await getNewAccessTokens(refresh_token)
-    writeFileSync(tokenPath, JSON.stringify({
-      ...tokenJson,
-      access_token: newToken.access_token
-    }))
-    console.log(`[log] refreshed access token.`)
-  }, (expires_in - 600) * 1000)
+  const { refresh_token } = tokenJson
+  const newToken = await getNewAccessTokens(refresh_token)
+  writeFileSync(tokenPath, JSON.stringify({
+    ...tokenJson,
+    access_token: newToken.access_token
+  }))
+  console.log(`[log] refreshed access token.`)
 }
 
 exports.setupToken = async function() {
   try {
-    const tokenJson = JSON.parse(readFileSync(tokenPath).toString())
-    console.log(`[log] already have access token. and refresh access token.`)
-    const { refresh_token } = tokenJson
-    const newToken = await getNewAccessTokens(refresh_token)
-    writeFileSync(tokenPath, JSON.stringify({
-      ...tokenJson,
-      access_token: newToken.access_token
-    }))
-    console.log(`[log] refreshed access token.`)
+    await refreshToken()
   } catch(e) {
     console.log(`[log] have not access token. and get access token.`)
     const authCode = await getAuthorizationCode()
@@ -124,6 +113,11 @@ exports.getSpotifyCurrentTrack = async function() {
       "Content-Type": "application/json",
     },
   })
+
+  if (res.status === 401) {
+    await refreshToken()
+    return false
+  }
 
   if (res.status !== 200) {
     return false
