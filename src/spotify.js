@@ -1,9 +1,10 @@
-const { writeFileSync, readFileSync, statSync } = require('fs');
+const { writeFileSync, readFileSync } = require('fs');
 const fetch = require('node-fetch');
 const http = require('http');
 const { execSync } = require('child_process');
 const url = require('url');
 const config = require('./config');
+const { sleep } = require('./util');
 
 const { spotify: { clientId, clientSecret, callbackServer, tokenPath } } = config;
 const authorizeBaseUrl = 'https://accounts.spotify.com/authorize'
@@ -101,7 +102,7 @@ exports.setupToken = async function() {
   }
 }
 
-exports.getSpotifyCurrentTrack = async function() {
+exports.getSpotifyCurrentTrack = async function getSpotifyCurrentTrack({ retryWithRefresh } = { retryWithRefresh: 3}) {
   const tokenJson = JSON.parse(readFileSync(tokenPath).toString())
   const { access_token } = tokenJson
 
@@ -116,7 +117,11 @@ exports.getSpotifyCurrentTrack = async function() {
 
   if (res.status === 401) {
     await refreshToken()
-    return false
+    if (retryWithRefresh === 0) {
+      return false
+    }
+    await sleep(3 * 1000)
+    return await getSpotifyCurrentTrack({ retryWithRefresh: retryWithRefresh - 1 })
   }
 
   if (res.status !== 200) {

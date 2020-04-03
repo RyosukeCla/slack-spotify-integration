@@ -1,7 +1,8 @@
-exports.timeout = function(ms) {
-  return new Promise((_, reject) => {
+exports.sleep = function(ms) {
+  return new Promise((resolve) => {
     setTimeout(() => {
-      reject()
+      resolve()
     }, ms)
   })
 }
+
